@@ -213,7 +213,7 @@ public:
         nh.param<std::string>("sequence", sequence, "map");
         nh.param<std::string>("configDirectory", configDirectory, "map");
 
-        std::cout << "SAVE DIR:" << saveDirectory << std::endl;
+        // std::cout << "SAVE DIR:" << saveDirectory << std::endl;
 
         std::string sensorStr;
         nh.param<std::string>("lio_sam_6axis/sensor", sensorStr, "ouster");
@@ -252,7 +252,7 @@ public:
         extRPY = Eigen::Map<const Eigen::Matrix<double, -1, -1, Eigen::RowMajor>>(extRPYV.data(), 3, 3);
         extTrans = Eigen::Map<const Eigen::Matrix<double, -1, -1, Eigen::RowMajor>>(extTransV.data(), 3, 1);
         extQRPY = Eigen::Quaterniond(extRPY);
-        //    std::cout << "qw:" << extQRPY << std::endl;
+        // std::cout << "qw: " << extQRPY.x() << " "<< extQRPY.y() << " " << extQRPY.z() << " " << extQRPY.w() << std::endl;
 
         if (sensor == SensorType::HESAI) {
             nh.param<vector<double >>("lio_sam_6axis/imuAccBias_N", imuAccBias_NV, vector<double>());

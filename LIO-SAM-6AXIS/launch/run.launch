@@ -1,16 +1,15 @@
 <launch>
     <arg name="project" default="lio_sam_6axis"/>
-    <arg name="bag_path" default="/xchu/data/hilti/exp09_cupola.bag"/>
-    <arg name="sequence" default="hkust_CAMPUS"/>
 
-    <!-- Parameters -->
-    <!--    <rosparam file="$(find lio_sam_6axis)/config/params_ouster.yaml" command="load"/>-->
-    <rosparam file="$(find lio_sam_6axis)/config/params_vlp.yaml" command="load"/>
+    <param name="use_sim_time" value="true" />
+
+
+    <rosparam file="$(find lio_sam_6axis)/config/params_HDL_32.yaml" command="load"/>
 
     <!--- LOAM -->
     <param name="saveDirectory" type="string" value="$(find lio_sam_6axis)/data/"/>
     <param name="configDirectory" type="string" value="$(find lio_sam_6axis)/config/"/>
-    <rosparam param="sequence" subst_value="true">$(arg sequence)</rosparam>
+    <param name="sequence" type="string" value="MAP"/>
     <include file="$(find lio_sam_6axis)/launch/include/module_loam.launch"/>
 
     <!--- Robot State TF -->
@@ -22,7 +21,5 @@
     <!--- Run Rviz-->
     <node pkg="rviz" type="rviz" name="$(arg project)_rviz"
           args="-d $(find lio_sam_6axis)/launch/include/config/vlp.rviz"/>
-
-    <node pkg="rosbag" type="play" name="bag_play" args="$(arg bag_path) --clock -d 5"/>
 
 </launch>

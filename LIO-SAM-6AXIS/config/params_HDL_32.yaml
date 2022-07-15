@@ -1,6 +1,6 @@
 lio_sam_6axis:
 
-  #  velodyne16 and stim300(6 axis)
+  #  velodyne32
 
   # Topics
   pointCloudTopic: "velodyne_points"               # Point cloud data

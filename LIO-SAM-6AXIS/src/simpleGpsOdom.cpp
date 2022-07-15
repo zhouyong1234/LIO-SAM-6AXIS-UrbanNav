@@ -18,9 +18,11 @@
 class GNSSOdom {
 public:
     GNSSOdom() : nh("~") {
-        gpsSub = nh.subscribe("/fix", 100, &GNSSOdom::GNSSCB, this, ros::TransportHints().tcpNoDelay());
+        gpsSub = nh.subscribe("/navsat/fix", 100, &GNSSOdom::GNSSCB, this, ros::TransportHints().tcpNoDelay());
+        gpsOdomSub = nh.subscribe("/navsat/odom", 100, &GNSSOdom::GNSSOdomCB, this, ros::TransportHints().tcpNoDelay());
         gpsOdomPub = nh.advertise<nav_msgs::Odometry>("/gps_odom", 100, false);
         fusedPathPub = nh.advertise<nav_msgs::Path>("/fused_gps_path", 100);
+        gpsOdomPathPub = nh.advertise<nav_msgs::Path>("/navsat/odom/path", 100);
     }
 
 private:
@@ -70,7 +72,7 @@ private:
 
         // make sure your initial yaw and origin postion are consistent
         if (!firstYawInit) {
-            ROS_ERROR("waiting init origin yaw");
+            ROS_WARN("waiting init origin yaw");
             return;
         }
 
@@ -120,11 +122,30 @@ private:
         fusedPathPub.publish(rospath);
     }
 
+    void GNSSOdomCB(const nav_msgs::OdometryConstPtr &msg)
+    {
+        gpsOdomPath.header.frame_id = "map";
+        gpsOdomPath.header.stamp = msg->header.stamp;
+        geometry_msgs::PoseStamped pose;
+        pose.header = gpsOdomPath.header;
+        pose.pose.position.x = msg->pose.pose.position.x;
+        pose.pose.position.y = msg->pose.pose.position.y;
+        pose.pose.position.z = msg->pose.pose.position.z;
+        pose.pose.orientation.x = msg->pose.pose.orientation.x;
+        pose.pose.orientation.y = msg->pose.pose.orientation.y;
+        pose.pose.orientation.z = msg->pose.pose.orientation.z;
+        pose.pose.orientation.w = msg->pose.pose.orientation.w;
+        gpsOdomPath.poses.push_back(pose);
+        gpsOdomPathPub.publish(gpsOdomPath);
+    }
+
+
     ros::NodeHandle nh;
     GpsTools gtools;
 
-    ros::Publisher gpsOdomPub, fusedPathPub;
+    ros::Publisher gpsOdomPub, fusedPathPub, gpsOdomPathPub;
     ros::Subscriber gpsSub;
+    ros::Subscriber gpsOdomSub;
 
     std::mutex mutexLock;
     std::deque<sensor_msgs::NavSatFixConstPtr> gpsBuf;
@@ -136,6 +157,7 @@ private:
     double yaw = 0.0, prevYaw = 0.0;
     geometry_msgs::Quaternion yawQuat;
     nav_msgs::Path rospath;
+    nav_msgs::Path gpsOdomPath;
 };
 
 int main(int argc, char **argv) {

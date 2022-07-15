@@ -1,6 +1,36 @@
-<img align="center" src="README/test-16548681575981.gif" style="zoom: 200%;" />
+# LIO-SAM-6AXIS-UrbanNav
+
+LIO_SAM_6AXIS适配UrbanNav，并对比添加GPS约束和不加GPS约束的结果
+
+# RUN
+```
+roslaunch lio_sam_6axis run.launch
+```
+
+初始阶段，LIO坐标系与GPS坐标系未对齐
+![](RESULT/rviz_screenshot_2022_07_15-16_47_11.png)
+
+经过一段时间，加入GPS约束后，GPS轨迹和LIO轨迹基本对齐
+![](RESULT/rviz_screenshot_2022_07_15-16_48_41.png)
+
+
+未添加GPS约束，轨迹如下
+![](RESULT/no_gps_constraint.png)
+
+添加GPS约束，轨迹如下
+![](RESULT/with_gps_constraint.png)
+
+GPS约束和回环约束如下
+![](RESULT/loop_gps_constraint.png)
+
+
+-----------------------------------
+
 
 # LIO_SAM_6AXIS
+
+<img align="center" src="README/test-16548681575981.gif" style="zoom: 200%;" />
+
 
 This repo may help to adapt LIO_SAM for your own sensors! It has some changes comparing with the origin system.
 

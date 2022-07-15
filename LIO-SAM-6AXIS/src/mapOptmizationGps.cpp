@@ -255,8 +255,8 @@ public:
         dataSaverPtr->setConfigDir(configDirectory);
 
         allocateMemory();
-        std::cout << savePCDDirectory << std::endl;
-        std::cout << sequence << std::endl;
+        // std::cout << savePCDDirectory << std::endl;
+        // std::cout << sequence << std::endl;
     }
 
     void allocateMemory() {
